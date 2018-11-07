@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable name="item" type="com.hamster.mojo.model.Hamster"/>
+        <variable name="presenter" type="com.hamster.mojo.presenter.Presenter"/>
+    </data>
+    <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary">
+
+        <ImageView
+                android:layout_width="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/description"
+                app:layout_constraintEnd_toEndOf="@id/description"
+                android:layout_height="match_parent"
+                app:pictureUrl="@{item.image}"
+                android:id="@+id/img"/>
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/img"
+                android:text="@{item.description}"
+                android:id="@+id/description"/>
+
+        <ImageView android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   app:srcCompat="@android:drawable/ic_menu_share"
+                   app:layout_constraintStart_toStartOf="parent"
+                   android:onClick="@{v->presenter.share(v.context,item)}"/>
+    </android.support.constraint.ConstraintLayout>
+</layout>
