@@ -9,7 +9,6 @@ import android.net.ConnectivityManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
-import android.util.Log
 import android.view.Menu
 import com.hamster.mojo.R
 import com.hamster.mojo.adapter.HamsterAdapter
@@ -43,8 +42,8 @@ class MainActivity : AppCompatActivity() {
     private fun loadData() {
         if (!isNetworkConnected()) {
             loadFromDB().subscribe {
-                Log.i(TAG, "onCreate=>$it")
                 (rvHamsters.adapter as HamsterAdapter).submitList(it.toMutableList())
+
             }
         } else {
             loadFromNetwork()
@@ -57,7 +56,9 @@ class MainActivity : AppCompatActivity() {
     private fun loadFromNetwork() {
         val model = ViewModelProviders.of(this).get(HamsterViewModel::class.java)
         model.getHamsterLiveData().observe(this, Observer {
-            (rvHamsters.adapter as HamsterAdapter).submitList(it?.toMutableList())
+            val mutableList = it?.toMutableList()
+            mutableList?.sort()
+            (rvHamsters.adapter as HamsterAdapter).submitList(mutableList)
         })
     }
 
@@ -85,7 +86,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun saveToDB() = Observable.fromCallable {
         val hamsters = (rvHamsters.adapter as HamsterAdapter).list
-        Log.i(TAG, "onStop=>$hamsters")
         db.hamsterDao().insertAll(hamsters)
     }.subscribeOn(Schedulers.io()).subscribe()
 
